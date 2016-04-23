@@ -32,7 +32,22 @@ BTreeIndex::BTreeIndex(const std::string & relationName,
 		const int attrByteOffset,
 		const Datatype attrType)
 {
+	//first, check if the index file exists
+	//if the file exists, open it
+	//if not, create a new file
+	cout << "input parameters\n";
+	cout << "relationName: " << relationName;
+	cout << "outIndexName: " << outIndexName;
+	cout << "bufMgrIn: " << bufMgrIn;
+	cout << "attrByteOffset: " << attrByteOffset;
+	cout << "attrType: " << attrType;
+	try {
+		//try to find the file?
 
+	}catch (FileNotFoundException fnfe){
+		//create the new file
+		File file = new BlobFile(outIndexName, true);
+	}
 }
 
 
