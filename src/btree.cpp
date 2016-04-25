@@ -15,7 +15,8 @@
 #include "exceptions/index_scan_completed_exception.h"
 #include "exceptions/file_not_found_exception.h"
 #include "exceptions/end_of_file_exception.h"
-
+#include <iostream>
+#include <memory>
 
 //#define DEBUG
 
@@ -36,14 +37,14 @@ BTreeIndex::BTreeIndex(const std::string & relationName,
 	//if the file exists, open it
 	//if not, create a new file
 	//need to do somethi9ngn different for each 3 types of int, double and string
-	cout << "input parameters\n";
-	cout << "relationName: " << relationName;
-	cout << "outIndexName: " << outIndexName;
-	cout << "bufMgrIn: " << bufMgrIn;
-	cout << "attrByteOffset: " << attrByteOffset;
-	cout << "attrType: " << attrType;
-	bufMrg = bufMgrIn;
-	attrByteOffset = attrByteOffset;
+	std::cout << "input parameters\n";
+	std::cout << "relationName: " << relationName;
+	std::cout << "outIndexName: " << outIndexName;
+	std::cout << "bufMgrIn: " << bufMgrIn;
+	std::cout << "attrByteOffset: " << attrByteOffset;
+	std::cout << "attrType: " << attrType;
+	bufMgr = bufMgrIn;
+	//attrByteOffset = attrByteOffset;
 	attributeType = attrType;
 	if (attributeType == 0){
 		//0 = interger attribute type
@@ -55,7 +56,7 @@ BTreeIndex::BTreeIndex(const std::string & relationName,
 		nodeOccupancy = DOUBLEARRAYNONLEAFSIZE;
 		leafOccupancy = DOUBLEARRAYLEAFSIZE;
 	} 
-	else if (attributeType == STRING){
+	else if (attributeType == 3){
 		//2 = string attribute type
 		nodeOccupancy = STRINGARRAYNONLEAFSIZE;
 		leafOccupancy = STRINGARRAYLEAFSIZE;	
@@ -64,7 +65,7 @@ BTreeIndex::BTreeIndex(const std::string & relationName,
 		//should never occer
 	}
 	try {
-		file = new BlobFile(outIndexName, false);what a
+		file = new BlobFile(outIndexName, false);
 		//try to find the file?
 
 	}catch (FileNotFoundException fnfe){
