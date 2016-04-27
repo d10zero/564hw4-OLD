@@ -15,8 +15,8 @@
 #include "exceptions/index_scan_completed_exception.h"
 #include "exceptions/file_not_found_exception.h"
 #include "exceptions/end_of_file_exception.h"
-#include <iostream>
-#include <memory>
+//#include <iostream>
+//#include <memory>
 
 //#define DEBUG
 
@@ -43,9 +43,18 @@ BTreeIndex::BTreeIndex(const std::string & relationName,
 	std::cout << "bufMgrIn: " << bufMgrIn;
 	std::cout << "attrByteOffset: " << attrByteOffset;
 	std::cout << "attrType: " << attrType;
+	//assign values from the input parameters to this instance
 	bufMgr = bufMgrIn;
-	//attrByteOffset = attrByteOffset;
+	this->attrByteOffset = attrByteOffset;
 	attributeType = attrType;
+
+	//do the following depending on the attribute type of string, 
+	//int or double
+	//**********from the project spec*********
+	//std::ostringstream idxStr;
+	//idxStr << relationName << ’.’ << attrByteOffset;
+	//std::string indexName = idxStr.str() ; // indexName is the name of the index file
+
 	if (attributeType == 0){
 		//0 = interger attribute type
 		nodeOccupancy = INTARRAYNONLEAFSIZE;
@@ -56,13 +65,15 @@ BTreeIndex::BTreeIndex(const std::string & relationName,
 		nodeOccupancy = DOUBLEARRAYNONLEAFSIZE;
 		leafOccupancy = DOUBLEARRAYLEAFSIZE;
 	} 
-	else if (attributeType == 3){
+	else if (attributeType == 2){
 		//2 = string attribute type
 		nodeOccupancy = STRINGARRAYNONLEAFSIZE;
 		leafOccupancy = STRINGARRAYLEAFSIZE;	
 	}
 	else {
-		//should never occer
+		//should never occur
+		std::cout << "none of the attribute types matched";
+		//throw exception 
 	}
 	try {
 		file = new BlobFile(outIndexName, false);
@@ -70,6 +81,7 @@ BTreeIndex::BTreeIndex(const std::string & relationName,
 
 	}catch (FileNotFoundException fnfe){
 		//create the new file, which is declared in the header btree.h
+		std::cout << "file not found exception \n";
 		file = new BlobFile(outIndexName, true);
 	}
 }
@@ -81,6 +93,14 @@ BTreeIndex::BTreeIndex(const std::string & relationName,
 
 BTreeIndex::~BTreeIndex()
 {
+	//unpin btree pages that re pinned
+	//for(int i = 0; i < bufMgr.bufPool.size(); i++)
+	//{
+	//	bufMgr->unpinpage(i);
+	//}
+	//flush the buffer and exit
+	bufMgr->flushFile(file);
+	delete file; // called to trigger the blobfile class's destructor
 }
 
 // -----------------------------------------------------------------------------
@@ -88,6 +108,47 @@ BTreeIndex::~BTreeIndex()
 // -----------------------------------------------------------------------------
 
 const void BTreeIndex::insertEntry(const void *key, const RecordId rid) 
+{
+	if( attributeType == INTEGER)
+	{
+		insertInteger();
+	} 
+	else if (attributeType == DOUBLE)
+	{
+		insertDouble();
+	}
+	else if (attributeType == STRING)
+	{
+		insertString();
+	}
+}
+
+
+// ----------------------------------------------------------------------------
+//BTreeIndex::insertInteger
+//
+// ---------------------------------------------------------------------------
+const void BTreeIndex::insertInteger()
+{
+
+}
+
+
+// ----------------------------------------------------------------------------
+//BTreeIndex::insertDouble
+//
+// ---------------------------------------------------------------------------
+const void BTreeIndex::insertDouble()
+{
+
+
+}
+
+// ----------------------------------------------------------------------------
+//BTreeIndex::insertString
+//
+// ---------------------------------------------------------------------------
+const void BTreeIndex::insertString()
 {
 
 }
