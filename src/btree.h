@@ -62,14 +62,13 @@ const  int DOUBLEARRAYLEAFSIZE = ( Page::SIZE - sizeof( PageId ) ) / ( sizeof( d
  * @brief Number of key slots in B+Tree leaf for STRING key.
  */
 //                                                    sibling ptr           key                      rid
-const  int STRINGARRAYLEAFSIZE = ( Page::SIZE - sizeof( PageId ) ) / ( 10 * sizeof(char) + sizeof( RecordId ) );
+const int STRINGARRAYLEAFSIZE = ( Page::SIZE - sizeof( PageId ) ) / ( 10 * sizeof(char) + sizeof( RecordId ) );
 
 /**
  * @brief Number of key slots in B+Tree non-leaf for INTEGER key.
  */
 //                                                     level     extra pageNo                  key       pageNo
-const  int INTARRAYNONLEAFSIZE = ( Page::SIZE - sizeof( int ) - sizeof( PageId ) ) / ( sizeof( int ) + sizeof( PageId ) );
-
+const int INTARRAYNONLEAFSIZE = ( Page::SIZE - sizeof( int ) - sizeof( PageId ) ) / ( sizeof( int) + sizeof( PageId) );
 /**
  * @brief Number of key slots in B+Tree leaf for DOUBLE key.
  */
@@ -354,6 +353,11 @@ class BTreeIndex {
    */
 	PageId	currentPageNum;
 
+	/**
+	 * Current page in scan
+	 */
+	Page *currentPage;
+
   /**
    * Current Page being scanned.
    */
@@ -438,6 +442,13 @@ class BTreeIndex {
 	**/
 	const void insertEntry(const void* key, const RecordId rid);
 
+
+	/**
+	 *
+	 *
+	 */
+
+	int compareIndexKey(const void *one, const void *two, bool string1 = true);
 
   /**
 	 * Begin a filtered scan of the index.  For instance, if the method is called 
