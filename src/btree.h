@@ -354,6 +354,11 @@ class BTreeIndex {
    */
 	PageId	currentPageNum;
 
+	/**
+	 * Current page in scan
+	 */
+	Page *currentPage;
+
   /**
    * Current Page being scanned.
    */
@@ -438,6 +443,13 @@ class BTreeIndex {
 	**/
 	const void insertEntry(const void* key, const RecordId rid);
 
+
+	/**
+	 *
+	 *
+	 */
+
+	int compareIndexKey(const void *one, const void *two, bool string1 = true);
 
   /**
 	 * Begin a filtered scan of the index.  For instance, if the method is called 
