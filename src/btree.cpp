@@ -38,20 +38,11 @@ BTreeIndex::BTreeIndex(const std::string & relationName,
 	//if not, create a new file
 	//need to do somethi9ngn different for each 3 types of int, double and string
 	std::cout << "input parameters\n";
-<<<<<<< HEAD
-	std::cout << "relationName: " << relationName;
-	std::cout << "outIndexName: " << outIndexName;
-	std::cout << "bufMgrIn: " << bufMgrIn;
-	std::cout << "attrByteOffset: " << attrByteOffset;
-	std::cout << "attrType: " << attrType;
-	//assign values from the input parameters to this instance
-=======
 	std::cout << "relationName: " << relationName << "\n";
 	std::cout << "outIndexName: " << outIndexName << "\n";
 	std::cout << "bufMgrIn: " << bufMgrIn << "\n";
 	std::cout << "attrByteOffset: " << attrByteOffset << "\n";
 	std::cout << "attrType: " << attrType << "\n";
->>>>>>> 8d000fb44e623f545bf75736a2432c2140b2c9f2
 	bufMgr = bufMgrIn;
 	this->attrByteOffset = attrByteOffset;
 	attributeType = attrType;
@@ -80,11 +71,8 @@ BTreeIndex::BTreeIndex(const std::string & relationName,
 	}
 	else {
 		//should never occur
-<<<<<<< HEAD
 		std::cout << "none of the attribute types matched";
-		//throw exception 
-=======
->>>>>>> 8d000fb44e623f545bf75736a2432c2140b2c9f2
+		//throw exception
 	}
 	try {
 		file = new BlobFile(outIndexName, false);
