@@ -174,7 +174,7 @@ const void BTreeIndex::startScan(const void* lowValParm,
 		if(attributeType == 0){ //INT
 			LeafNodeInt *currentNode = (LeafNodeInt *)currentPage;
 			int i;
-			for(i = 0; compareIndexKey(currentNode->keyArray + i, lowValParm, false) > 0 && i < INTARRAYLEAFSIZE; i++);
+			for(i = 0; compareIndexKey(currentNode->keyArray + i, lowValParm, false) > 0 && i < leafOccupancy; i++);
 			if(lowOpParm == GT && compareIndexKey(currentNode->keyArray + i, lowValParm, false) == 0){
 				throw NoSuchKeyFoundException();
 			}
@@ -184,7 +184,7 @@ const void BTreeIndex::startScan(const void* lowValParm,
 		else if(attributeType == 1){ //DOUBLE
 			LeafNodeDouble *currentNode = (LeafNodeDouble *)currentPage;
 			int i;
-			for(i = 0; compareIndexKey(currentNode->keyArray + i, lowValParm, false) > 0 && i < INTARRAYLEAFSIZE; i++);
+			for(i = 0; compareIndexKey(currentNode->keyArray + i, lowValParm, false) > 0 && i < leafOccupancy; i++);
 			if(lowOpParm == GT && compareIndexKey(currentNode->keyArray + i, lowValParm, false) == 0){
 				throw NoSuchKeyFoundException();
 			}
@@ -194,7 +194,7 @@ const void BTreeIndex::startScan(const void* lowValParm,
 		else if(attributeType == 2){ //STRING
 			LeafNodeString *currentNode = (LeafNodeString *)currentPage;
 			int i;
-			for(i = 0; compareIndexKey(currentNode->keyArray + i, lowValParm, false) > 0 && i < INTARRAYLEAFSIZE; i++);
+			for(i = 0; compareIndexKey(currentNode->keyArray + i, lowValParm, false) > 0 && i < leafOccupancy; i++);
 			if(lowOpParm == GT && compareIndexKey(currentNode->keyArray + i, lowValParm, false) == 0){
 				throw NoSuchKeyFoundException();
 			}
@@ -212,7 +212,7 @@ const void BTreeIndex::startScan(const void* lowValParm,
 			if(attributeType == 0){ // int
 				NonLeafNodeInt *currentNode = (NonLeafNodeInt *)currentPage;
 				int i = 0;
-				for(i = 0; currentNode->pageNoArray[i+1] != Page::INVALID_NUMBER && i < INTARRAYNONLEAFSIZE && compareIndexKey(currentNode->keyArray + i, lowValParm, false) > 0; i++);
+				for(i = 0; currentNode->pageNoArray[i+1] != Page::INVALID_NUMBER && i < nodeOccupancy && compareIndexKey(currentNode->keyArray + i, lowValParm, false) > 0; i++);
 
 				if(lowOpParm == GT && compareIndexKey(currentNode->keyArray + i, lowValParm, false) == 0){
 					i++;
@@ -227,7 +227,7 @@ const void BTreeIndex::startScan(const void* lowValParm,
 				bufMgr->readPage(file, currentPageNum, currentPage);
 				LeafNodeInt *currentNode1 = (LeafNodeInt *)currentPage;
 				int j;
-				for(j = 0; compareIndexKey(currentNode1->keyArray + j, lowValParm, false) > 0 && j < INTARRAYLEAFSIZE; j++);
+				for(j = 0; compareIndexKey(currentNode1->keyArray + j, lowValParm, false) > 0 && j < leafOccupancy; j++);
 				if(lowOpParm == GT && compareIndexKey(currentNode1->keyArray + j, lowValParm, false) == 0){
 					throw NoSuchKeyFoundException();
 				}
@@ -238,7 +238,7 @@ const void BTreeIndex::startScan(const void* lowValParm,
 			else if(attributeType == 1){ // double
 				NonLeafNodeDouble *currentNode = (NonLeafNodeDouble *)currentPage;
 				int i = 0;
-				for(i = 0; currentNode->pageNoArray[i+1] != Page::INVALID_NUMBER && i < DOUBLEARRAYNONLEAFSIZE && compareIndexKey(currentNode->keyArray + i, lowValParm, false) > 0; i++);
+				for(i = 0; currentNode->pageNoArray[i+1] != Page::INVALID_NUMBER && i < nodeOccupancy && compareIndexKey(currentNode->keyArray + i, lowValParm, false) > 0; i++);
 
 				if(lowOpParm == GT && compareIndexKey(currentNode->keyArray + i, lowValParm, false) == 0){
 					i++;
@@ -253,7 +253,7 @@ const void BTreeIndex::startScan(const void* lowValParm,
 				bufMgr->readPage(file, currentPageNum, currentPage);
 				LeafNodeDouble *currentNode1 = (LeafNodeDouble *)currentPage;
 				int j;
-				for(j = 0; compareIndexKey(currentNode1->keyArray + j, lowValParm, false) > 0 && j < DOUBLEARRAYLEAFSIZE; j++);
+				for(j = 0; compareIndexKey(currentNode1->keyArray + j, lowValParm, false) > 0 && j < leafOccupancy; j++);
 				if(lowOpParm == GT && compareIndexKey(currentNode1->keyArray + j, lowValParm, false) == 0){
 					throw NoSuchKeyFoundException();
 				}
@@ -263,7 +263,7 @@ const void BTreeIndex::startScan(const void* lowValParm,
 			else if(attributeType == 2){ // string
 				NonLeafNodeString *currentNode = (NonLeafNodeString *)currentPage;
 				int i = 0;
-				for(i = 0; currentNode->pageNoArray[i+1] != Page::INVALID_NUMBER && i < STRINGARRAYNONLEAFSIZE && compareIndexKey(currentNode->keyArray + i, lowValParm, false) > 0; i++);
+				for(i = 0; currentNode->pageNoArray[i+1] != Page::INVALID_NUMBER && i < nodeOccupancy && compareIndexKey(currentNode->keyArray + i, lowValParm, false) > 0; i++);
 
 				if(lowOpParm == GT && compareIndexKey(currentNode->keyArray + i, lowValParm, false) == 0){
 					i++;
@@ -278,7 +278,7 @@ const void BTreeIndex::startScan(const void* lowValParm,
 				bufMgr->readPage(file, currentPageNum, currentPage);
 				LeafNodeString *currentNode1 = (LeafNodeString *)currentPage;
 				int j;
-				for(j = 0; compareIndexKey(currentNode1->keyArray + j, lowValParm, false) > 0 && j < STRINGARRAYLEAFSIZE; j++);
+				for(j = 0; compareIndexKey(currentNode1->keyArray + j, lowValParm, false) > 0 && j < leafOccupancy; j++);
 				if(lowOpParm == GT && compareIndexKey(currentNode1->keyArray + j, lowValParm, false) == 0){
 					throw NoSuchKeyFoundException();
 				}
