@@ -50,10 +50,10 @@ BTreeIndex::BTreeIndex(const std::string & relationName,
 	//do the following depending on the attribute type of string, 
 	//int or double
 	//**********from the project spec*********
-	//std::ostringstream idxStr;
-	//idxStr << relationName << ’.’ << attrByteOffset;
-	//std::string indexName = idxStr.str() ; // indexName is the name of the index file
-
+	std::ostringstream idxStr;
+	idxStr << relationName << '.' << attrByteOffset;
+	std::string indexName = idxStr.str() ; // indexName is the name of the index file
+	outIndexName = indexName;
 	if (attributeType == 0){
 		//0 = interger attribute type
 		nodeOccupancy = INTARRAYNONLEAFSIZE;
@@ -74,10 +74,22 @@ BTreeIndex::BTreeIndex(const std::string & relationName,
 		std::cout << "none of the attribute types matched";
 		//throw exception
 	}
+
+	//maybe should check the file::exists property instead of try-catching on file 
+	//not found error?
+	/*if (File::exists(indexName))
+	{
+		//use existing file
+	}
+	else 
+	{
+		//create new file
+	}*/
 	try {
 		file = new BlobFile(outIndexName, false);
 		//try to find the file?
-
+		
+	
 	}catch (FileNotFoundException fnfe){
 		//create the new file, which is declared in the header btree.h
 		std::cout << "file not found exception \n";
@@ -92,6 +104,8 @@ BTreeIndex::BTreeIndex(const std::string & relationName,
 
 BTreeIndex::~BTreeIndex()
 {
+	//flip the scanExecuting bool
+	scanExecuting = false;
 	//unpin btree pages that re pinned
 	//for(int i = 0; i < bufMgr.bufPool.size(); i++)
 	//{
@@ -214,6 +228,7 @@ const void BTreeIndex::startScan(const void* lowValParm,
 		const void* highValParm,
 		const Operator highOpParm)
 {
+	scanExecuting = true;
 	if(lowOpParm != GT && lowOpParm != GTE){
 		throw BadOpcodesException();
 	}
@@ -358,7 +373,7 @@ const void BTreeIndex::startScan(const void* lowValParm,
 
 const void BTreeIndex::scanNext(RecordId& outRid)
 {
-
+	scanExecuting = true;
 }
 
 // -----------------------------------------------------------------------------
