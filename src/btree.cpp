@@ -124,15 +124,15 @@ const void BTreeIndex::insertEntry(const void *key, const RecordId rid)
 {
 	if( attributeType == INTEGER)
 	{
-		insertInteger();
+		insertInteger(&key, rid);
 	} 
 	else if (attributeType == DOUBLE)
 	{
-		insertDouble();
+		insertDouble(&key, rid);
 	}
 	else if (attributeType == STRING)
 	{
-		insertString();
+		insertString(&key, rid);
 	}
 }
 
@@ -141,9 +141,10 @@ const void BTreeIndex::insertEntry(const void *key, const RecordId rid)
 //BTreeIndex::insertInteger
 //
 // ---------------------------------------------------------------------------
-const void BTreeIndex::insertInteger()
+const void BTreeIndex::insertInteger(const void *key, const RecordId rid) 
 {
-
+	RIDKeyPair<int> entry;
+	entry.set(rid, *((int* )key));
 }
 
 
@@ -151,8 +152,10 @@ const void BTreeIndex::insertInteger()
 //BTreeIndex::insertDouble
 //
 // ---------------------------------------------------------------------------
-const void BTreeIndex::insertDouble()
+const void BTreeIndex::insertDouble(const void *key, const RecordId rid) 
 {
+	RIDKeyPair<int> entry;
+	entry.set(rid, *((double* )key));
 
 
 }
@@ -161,8 +164,10 @@ const void BTreeIndex::insertDouble()
 //BTreeIndex::insertString
 //
 // ---------------------------------------------------------------------------
-const void BTreeIndex::insertString()
+const void BTreeIndex::insertString(const void *key, const RecordId rid) 
 {
+	RIDKeyPair<int> entry;
+	entry.set(rid, *((char* )key));
 
 }
 

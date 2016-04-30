@@ -484,10 +484,9 @@ class BTreeIndex {
 	**/
 	const void endScan();
 
-
-	const void insertInteger();
-	const void insertDouble();
-	const void insertString();	
+	const void insertInteger(const void* key, const RecordId rid);
+	const void insertDouble(const void* key, const RecordId rid);
+	const void insertString(const void* key, const RecordId rid);	
 };
 
 }
