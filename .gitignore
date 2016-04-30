@@ -1,2 +1,3 @@
 .project
 src/badgerdb_main
+src/obj/**
