@@ -353,11 +353,6 @@ class BTreeIndex {
    */
 	PageId	currentPageNum;
 
-	/**
-	 * Current page in scan
-	 */
-	Page *currentPage;
-
   /**
    * Current Page being scanned.
    */
