@@ -133,6 +133,108 @@ const void BTreeIndex::insertInteger(const void *key, const RecordId rid)
 {
 	RIDKeyPair<int> entry;
 	entry.set(rid, *((int* )key));
+
+	if (rootPageNum == 2) { // root is leaf
+		Page *mainPage;
+		bufMgr->readPage(file, rootPageNum, mainPage);
+		LeafNodeInt *mainNode = (LeafNodeInt *) mainPage;
+		if(mainNode->ridArray[leafOccupancy-1].page_number !=Page::INVALID_NUMBER){
+			bufMgr->unPinPage(file, rootPageNum, false);
+
+	    	PageId newPid;
+
+
+	    	Page *mainPage; // targetPage
+	    	Page *onePage; // newPage
+	    	bufMgr->readPage(file, rootPageNum, mainPage);
+	    	bufMgr->allocPage(file, newPid, onePage);
+
+	    	LeafNodeInt *mainNode = (LeafNodeInt *)mainPage;
+	    	LeafNodeInt *oneNode = (LeafNodeInt *)onePage;
+
+
+	    	oneNode->rightSibPageNo = mainNode->rightSibPageNo;
+	    	mainNode->rightSibPageNo = newPid;
+
+	    	RecordId invalidRid;
+	    	invalidRid.page_number = Page::INVALID_NUMBER;
+
+	    	int index;
+
+	    	for(index = 0; compareIndexKey(mainNode->keyArray + index, key) >= 0 && index < leafOccupancy; index++);
+	    	int key_arr[leafOccupancy + 1];
+	    	RecordId rid_arr[leafOccupancy + 1];
+
+	    	std::copy(mainNode->keyArray, mainNode->keyArray + index, key_arr);
+	    	std::copy(mainNode->ridArray, mainNode->ridArray + index, rid_arr);
+            key_arr[index] = (int &)key;
+            rid_arr[index] = rid;
+
+			std::copy(mainNode->keyArray + index, mainNode->keyArray + leafOccupancy, key_arr + index + 1);
+            std::copy(mainNode->ridArray + index, mainNode->ridArray + leafOccupancy, rid_arr + index + 1);
+
+            std::copy(key_arr, key_arr + (leafOccupancy + 1) / 2, mainNode->keyArray);
+            std::copy(rid_arr, rid_arr + (leafOccupancy + 1) / 2, mainNode->ridArray);
+
+            std::copy(key_arr + (leafOccupancy + 1) / 2, key_arr + leafOccupancy + 1, oneNode->keyArray);
+            std::copy(rid_arr + (leafOccupancy + 1) / 2, rid_arr + leafOccupancy + 1, oneNode->ridArray);
+
+            std::fill_n(mainNode->ridArray + (leafOccupancy+1) / 2, leafOccupancy - (leafOccupancy+1) / 2, invalidRid);
+
+            bufMgr->unPinPage(file, rootPageNum, true);
+            bufMgr->unPinPage(file, newPid, true);
+            int newkey_arr = key_arr[(leafOccupancy + 1) / 2];
+
+
+
+	    	Page *newRootPage;
+	    	PageId newRootPid;
+	    	bufMgr->allocPage(file, newRootPid, newRootPage);
+	    	NonLeafNodeInt *newRootNode = (NonLeafNodeInt *)newRootPage;
+	    	newRootNode->level = 1;
+	    	
+// **************************************************************************************
+
+ /*    	assignKey(newRootNode, 0, &newkey_arr, true, false);
+	    	newRootNode->pageNoArray[0] = rootPageNum;
+	    	newRootNode->pageNoArray[1] = newPid;
+	    	bufMgr->unPinPage(file, newRootPid, true);
+
+	    	rootPageNum = newRootPid;
+	    	Page *metaPage;
+	    	bufMgr->allocPage(file, headerPageNum, metaPage);
+	    	IndexMetaInfo *metaInfo = (IndexMetaInfo *)metaPage;
+	    	metaInfo->rootPageNo = rootPageNum;
+	    	bufMgr->unPinPage(file, headerPageNum, true);
+
+		}
+	}
+	 else {
+    	int depth = 0; // length of path
+    	PageId *pidpath = NULL;
+    	Page *rootPage;
+    	bufMgr->readPage(file, rootPageNum, rootPage);
+    	NLT *rootNode = (NLT *)rootPage;
+    	pidpath = new PageId[rootNode->level];
+    	depth = rootNode->level;
+    	bufMgr->unPinPage(file, rootPageNum, false);
+    	PageId targetLeaf = searchLeaf<KT, NLT, LT, NLS>(key, pidpath);
+        if (!insertLeaf<KT, NLT, LT, LS>(targetLeaf, key, rid)) {
+        	PageId newPid;
+        	KT upward_key = splitLeaf<KT, NLT, LT, LS>(targetLeaf, key, rid, newPid);
+       		PageId attachPid;
+        	int j = insertNonLeaf<KT, NLT, LT, NLS>(upward_key, pidpath, depth,attachPid);
+        	Page *attachPage;
+        	bufMgr->readPage(file, attachPid, attachPage);
+        	NLT *attachNode = (NLT *)attachPage;
+        	attachNode->pageNoArray[j] = newPid;
+        	bufMgr->unPinPage(file, attachPid, true);
+        }
+        delete pidpath;
+
+        */
+    }
+}
 }
 
 
