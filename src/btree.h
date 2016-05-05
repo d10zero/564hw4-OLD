@@ -482,6 +482,10 @@ class BTreeIndex {
   const void insertInteger(const void* key, const RecordId rid);
   const void insertDouble(const void* key, const RecordId rid);
   const void insertString(const void* key, const RecordId rid); 
+  /*going to attempt to use template, never used this before, but it says to try it on piazza */
+  template<class type> const void insertRootNode(const void *key, const RecordId rid);
+  template<class type> const void insertLeafNode(const void *key, const RecordId rid);
+
 };
 
 }

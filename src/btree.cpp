@@ -50,9 +50,9 @@ BTreeIndex::BTreeIndex(const std::string & relationName,
 	//do the following depending on the attribute type of string, 
 	//int or double
 	//**********from the project spec*********
-	//std::ostringstream idxStr;
-	//idxStr << relationName << ’.’ << attrByteOffset;
-	//std::string indexName = idxStr.str() ; // indexName is the name of the index file
+	std::ostringstream idxStr;
+	idxStr << relationName << '.' << attrByteOffset;
+	std::string indexName = idxStr.str() ; // indexName is the name of the index file
 
 	if (attributeType == 0){
 		//0 = interger attribute type
@@ -139,19 +139,31 @@ const void BTreeIndex::insertEntry(const void *key, const RecordId rid)
 {
 	if( attributeType == INTEGER)
 	{
-		insertInteger(&key, rid);
+		insertRootNode<int>(&key, rid);
 	} 
 	else if (attributeType == DOUBLE)
 	{
-		insertDouble(&key, rid);
+		insertRootNode<double>(&key, rid);
 	}
 	else if (attributeType == STRING)
 	{
-		insertString(&key, rid);
+		insertRootNode<char>(&key, rid);
 	}
+	//if it's the root node, insert roo
+	//else insert at the leaf
+	
 }
 
 
+template<class type> const void BTreeIndex::insertRootNode(const void *key, const RecordId rid)
+{
+
+}
+
+template<class type> const void insertLeafNode(const void *key, const RecordId rid)
+{
+
+}
 // ----------------------------------------------------------------------------
 //BTreeIndex::insertInteger
 //
