@@ -74,7 +74,34 @@ BTreeIndex::BTreeIndex(const std::string & relationName,
 		std::cout << "none of the attribute types matched";
 		//throw exception
 	}
-	try {
+	if (File::exists(indexName)){
+
+		file = new BlobFile(indexName, false);
+		IndexMetaInfo* imi;
+		Page* tempPage;
+		PageId tempPageId;
+		bufMgr->allocPage(file, tempPageId, tempPage);
+		bufMgr->readPage(file, tempPageId, tempPage);
+		imi = (IndexMetaInfo*)tempPage;
+
+	} else {
+		file = new BlobFile(indexName, true);
+		Page* tempPage;
+		Page* tempMetaPage;
+		IndexMetaInfo* imi;
+		bufMgr->readPage(file, headerPageNum, tempMetaPage);
+		imi = (IndexMetaInfo *)tempMetaPage;
+		rootPageNum = (*imi).rootPageNo;
+		if ((*imi).attrByteOffset != this->attrByteOffset
+				|| (*imi).attrType != this->attributeType
+				|| (*imi).relationName != relationName
+				|| (*imi).rootPageNo != rootPageNum
+		){
+			throw BadIndexInfoException("BadIndexInfoException\n the shit did not work");
+		}
+
+	}
+	/*try {
 		file = new BlobFile(outIndexName, false);
 		//try to find the file?
 
@@ -82,7 +109,7 @@ BTreeIndex::BTreeIndex(const std::string & relationName,
 		//create the new file, which is declared in the header btree.h
 		std::cout << "file not found exception \n";
 		file = new BlobFile(outIndexName, true);
-	}
+	}*/
 }
 
 
